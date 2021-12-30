@@ -12,10 +12,10 @@ app.use(express.json());
 app.use(helmet()); 
 app.use(cors());
 
-const userr = require('../router/users');
-const productss = require('../router/products');
-const orderss = require('../router/orders');
-const authorizationss = require('../router/authorizations');
+const userr = require('../routes/users');
+const productss = require('../routes/products');
+const orderss = require('../routes/orders');
+const authorizationss = require('../routes/authorizations');
 
 app.use('/user', userr);
 app.use('/products', productss);
