@@ -7,9 +7,9 @@ USE Delilah_resto;
 CREATE TABLE usuarios(
 			id_usuario int NOT NULL primary key auto_increment,
 			nombre_usuario varchar (265),
-    		nombre varchar (265),
-    		apellido varchar (265),
-    		email varchar (265),
+            nombre varchar (265),
+            apellido varchar (265),
+            email varchar (265),
 			telefono varchar (265),
 			direccion varchar (265),
 			contrasena varchar (265),
@@ -40,9 +40,9 @@ INSERT INTO tipo_de_usuario (nombre_usuario) VALUES ('usuario')
 CREATE TABLE nuestros_platos(
 			id_plato int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			nombre_plato varchar (265),
-    		descripcion_plato varchar (265),
-    		precio int,
-    		imagen varchar(255)
+            descripcion_plato varchar (265),
+            precio int,
+            imagen varchar(255)
 )
 
 --Inserto valores a la tabla nuestros_platos:
@@ -69,8 +69,8 @@ VALUES('Focaccia','Pan de tipo italiano/romero/aceite de oliva',300, "https://vi
 CREATE TABLE platos_pedidos(
 			id_platos_pedidos int NOT NULL PRIMARY KEY AUTO_INCREMENT,
 			id_plato int,
-    		id_pedido int,
-    		cantidad int
+            id_pedido int,
+            cantidad int
 )
 
 
@@ -80,10 +80,10 @@ CREATE TABLE platos_pedidos(
 CREATE TABLE pedidos(
 			id_pedido int NOT NULL primary key auto_increment,
 			hora TIMESTAMP not null default CURRENT_TIMESTAMP,
-    		id_estado int,
-    		id_metodo_de_pago int,
-    		id_usuario int,
-    		id_plato int
+            id_estado int,
+            id_metodo_de_pago int,
+            id_usuario int,
+            id_plato int
 )
 
 --Creo la tabla metodo de pago
