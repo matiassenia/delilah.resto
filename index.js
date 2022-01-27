@@ -4,7 +4,7 @@ const dotenv = require("dotenv").config();
 
 const cors = require('cors');
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 const sequelize = require('sequelize');
 
 
@@ -12,12 +12,12 @@ app.use(express.json());
 app.use(helmet()); 
 app.use(cors());
 
-const userr = require('../routes/users');
-const productss = require('../routes/products');
-const orderss = require('../routes/orders');
-const authorizationss = require('../routes/authorizations');
+const userr = require('./routes/users');
+const productss = require('./routes/products');
+const orderss = require('./routes/orders');
+const authorizationss = require('./routes/authorizations');
 
-app.use('/user', userr);
+app.use('/users', userr);
 app.use('/products', productss);
 app.use('/orders', orderss);
 app.use('/authorization', authorizationss);
