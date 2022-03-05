@@ -1,7 +1,8 @@
 const sequelize = require('../conexion');
 const helmet = require ('helmet');
 const jwt = require('jsonwebtoken');
-const llave = 'passwordpassword1111';
+require('dotenv').config();
+const llave = process.env.LLAVE; ;
 
 
 const createUser = async (req, res) =>{
@@ -37,7 +38,7 @@ const loginUser = async (req, res) => {
         const result = await sequelize.query('SELECT * FROM usuarios WHERE nombre_usuario ="'+req.body.nombre_usuario+'"AND contrasena ="'+ req.body.contrasena +'"', { type: sequelize.QueryTypes.SELECT});
         
         const {nombre_usuario, contrasena} = req.body;
-            if (nombre_usuario !== result[0].nombre_usuario|| contrasena !== result[0].contrasena) {
+            if (nombre_usuario !== result[0].nombre_usuario || contrasena !== result[0].contrasena) {
                 return res.status(401).json({message: "Usuario invalido"});
             }
             const usuario = {
@@ -51,7 +52,7 @@ const loginUser = async (req, res) => {
             
     }catch (error) {
         console.log('No se encontró el usuario')
-        res.status(401).json({msg: "Error al intentar loguearse"})
+        res.status(404).json({msg: "Error al intentar loguearse"})
     }
 }
 
@@ -64,11 +65,8 @@ const getUsersById = async (req, res) => {
         {type: sequelize.QueryTypes.SELECT})
         res.status(200).json({result})
     } catch (error) {
-        console.log('Hubo un error ${error}')
-        res.status(404).json({
-            error, 
-            message: 'Usuario no existe'
-        })
+        console.log("Hubo un error")
+        res.status(400).json({msg: "Usuario no existe"})
     }
 } 
 
@@ -79,10 +77,7 @@ const UserDeleteById = async (req, res) => {
         res.status(200).json({msg:'Usuario eliminado'})
     } catch (error) {
         console.log('no se pudo eliminar al usuario')
-        res.status(404).json({
-            error, 
-            message: 'Usuario no eliminado'
-        })
+        res.status(404).json({error, msg: 'Usuario no eliminado'})
     }
 }
 
@@ -92,16 +87,9 @@ const UpdateUserById = async (req, res) => {
     const result = await sequelize.query(`UPDATE usuarios 
     SET nombre_usuario = ${nombre_usuario}, nombre =${nombre}, apellido = ${apellido}, email = ${email}, telefono = ${telefono}, direccion = ${direccion}, contrasena = ${contrasena}, tipo_de_usuario = ${tipo_de_usuario}, WHERE id_usuario = ${req.params.userId}`,
     { type: sequelize.QueryTypes.UPDATE })
-    
-    res.status(204).json({
-        message:'Usuario actualizado',
-        result
-        })
+        res.status(204).json({ message:'Usuario actualizado', result})
     } catch (error) {
-    res.status(404).json({
-        err,
-        message: ' error al intentar actualizar los usuarios'
-        })
+        res.status(404).json({error, msg: 'Error al intentar actualizar los usuarios'})
     }
 }
 
