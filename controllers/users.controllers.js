@@ -2,13 +2,19 @@ const sequelize = require('../conexion');
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const llave = process.env.LLAVE; ;
+const KEY = process.env.PRIVATE_KEY
 
 
 const createUser = async (req, res) =>{
     const { nombre_usuario, nombre, apellido, email, telefono, direccion, contrasena, tipo_de_usuario} = req.body
-
+    //pass hash
+    const salt = await bcrypt.genSalt(10)
+    const passwordHash = await bcrypt.hash(contrasena, salt);
+    console.log("password hasheado");
+    console.log(passwordHash);
+    //insert data
     let arrayInsertUsers = [`${nombre_usuario}`, `${nombre}`,`${apellido}`,`${email}`, `${telefono}`, `${direccion}`, `${contrasena}`, `${tipo_de_usuario}`]
+
     try {
         const UserData = await sequelize.query('INSERT INTO usuarios(nombre_usuario, nombre, apellido, email, telefono, direccion, contrasena, id_tipo_de_usuario ) VALUES( ?, ?, ?, ?, ?, ?, ?, ?)',
         {replacements: arrayInsertUsers , type: sequelize.QueryTypes.INSERT })
@@ -50,7 +56,8 @@ const loginUser = async (req, res) => {
                 id_usuario: result[0].id_usuario,
                 id_role:result[0].id_tipo_de_usuario,
             }
-            const jwtToken = jwt.sign(usuario, llave, {expiresIn: '1h'});
+            const jwtToken = jwt.sign(usuario, KEY, {expiresIn: '1h'});
+            console.log("token:", jwtToken)
             console.log(usuario)
             res.status(200).json({token: jwtToken});
             

@@ -1,7 +1,7 @@
 const rateLimit = require ('express-rate-limit');
 const jwt = require ('jsonwebtoken');
 require('dotenv').config();
-const KEY = process.env.LLAVE
+const KEY = process.env.PRIVATE_KEY
 
 //Rate limit
 const limiter = rateLimit ({
@@ -9,9 +9,9 @@ const limiter = rateLimit ({
     max: 5
 });
 
-
+//validate admin
 const ValidarAdmin = async (req, res, next) => {
-    const token = req.headers["authorization"]; 
+    const token = req.headers['authorization']; 
         if (!token) {
             return res.status(401).json({msg: "usuario noo valido"})
             }
@@ -19,11 +19,11 @@ const ValidarAdmin = async (req, res, next) => {
         try{
             jwt.verify(jwtClient, KEY, (err, decoded) => {
                 if (err) {
-                    return res.status(401).json ({msg:"Token invalido"})
-                    console.log("ha ocurrido un error con la validacion del token");
+                    console.log("ha ocurrido un error con la validacion del token administrador");
+                    return res.status(401).json ({msg:"Token admin invalido"})
                 }
                 if (decoded && decoded.id_role !== 2){
-                    return res.status(401).json({msg: "Es usuario invalido para ejecutar este tipo de acción"})
+                    return res.status(403).json({msg: "Es usuario invalido para ejecutar este tipo de acción"})
                 }
                 next();
                 console.log(decoded)
@@ -36,16 +36,12 @@ const ValidarAdmin = async (req, res, next) => {
 
 
 const verifyToken = async (req, res, next) => {
-    const token = req.headers["authorization"]; 
-        if (!token) {
-            return res.status(401).json({msg: "usuario no valido"})
-            }
-        const jwtClient = token.split(" ")[1];
+        const jwtClient = req.headers.authorization.split(" ")[1];
         try{
-            jwt.verify(jwtClient, KEY, (err, decoded) => {
+            jwt.verify(jwtClient, process.env.PRIVATE_KEY, (err, decoded) => {
                 if (err) {
-                    return res.status(401).json ({msg:"Token invalido"})
                     console.log("ha ocurrido un error con la validacion del token");
+                    return res.status(401).json ({msg:"Token invalido"})    
                 }
                 next();
                 console.log(decoded)
