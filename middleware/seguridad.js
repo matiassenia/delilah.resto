@@ -1,7 +1,6 @@
 const rateLimit = require ('express-rate-limit');
 const jwt = require ('jsonwebtoken');
 require('dotenv').config();
-const KEY = process.env.PRIVATE_KEY
 
 //Rate limit
 const limiter = rateLimit ({
@@ -9,6 +8,22 @@ const limiter = rateLimit ({
     max: 5
 });
 
+const verifyToken = async (req, res, next) => {
+    const token = req.headers.authorization.split(" ")[1];
+    
+    try{
+        jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) =>{
+            if(err){
+                console.log("ah ocurrido un error con la validacion del token");
+                return res.status(401).json({msg:"Token invalidooo"})
+            }
+        }) 
+        next()
+    } catch (err) {
+        console.log("error:" + error);
+        res.status(401).json({msg: 'Proporciona un token por favor'})
+    }
+}
 //validate admin
 const ValidarAdmin = async (req, res, next) => {
     const token = req.headers['authorization']; 
@@ -17,7 +32,7 @@ const ValidarAdmin = async (req, res, next) => {
             }
         const jwtClient = token.split(" ")[1];
         try{
-            jwt.verify(jwtClient, KEY, (err, decoded) => {
+            jwt.verify(jwtClient, process.env.SECRET_TOKEN, (err, decoded) => {
                 if (err) {
                     console.log("ha ocurrido un error con la validacion del token administrador");
                     return res.status(401).json ({msg:"Token admin invalido"})
@@ -35,22 +50,7 @@ const ValidarAdmin = async (req, res, next) => {
 }
 
 
-const verifyToken = async (req, res, next) => {
-        const jwtClient = req.headers.authorization.split(" ")[1];
-        try{
-            jwt.verify(jwtClient, process.env.PRIVATE_KEY, (err, decoded) => {
-                if (err) {
-                    console.log("ha ocurrido un error con la validacion del token");
-                    return res.status(401).json ({msg:"Token invalido"})    
-                }
-                next();
-                console.log(decoded)
-            });
-        } catch (e) {
-            console.log("error:" + error);
-            res.status(401).json({msg: 'Proporciona un token por favor'})
-        }
-}
+
 
 
 exports.ValidarAdmin = ValidarAdmin;
