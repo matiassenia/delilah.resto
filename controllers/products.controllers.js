@@ -73,7 +73,7 @@ const productsDeleteById = async (req, res) => {
     }
 }
 
-const UpdateProducts = async (req, res) => {
+const updateProducts = async (req, res) => {
     const {nombre_plato, descripcion_plato, precio, imagen} = req.body
     try {
     const result = await sequelize.query(`UPDATE nuestros_platos SET nombre_plato = "${nombre_plato}", descripcion = "${descripcion_plato}", precio = "${precio}", img = "${imagen}", WHERE id_plato = ${req.params.id}`,
@@ -91,4 +91,4 @@ exports.createProducts = createProducts;
 exports.getProducts = getProducts;
 exports.getProductsById = getProductsById;
 exports.productsDeleteById = productsDeleteById;
-exports.UpdateProducts = UpdateProducts;
+exports.updateProducts = updateProducts;
