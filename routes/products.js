@@ -6,7 +6,7 @@ router.post('/', productsController.createProducts);
 router.get('/', productsController.getProducts);
 router.get('/:productsId', productsController.getProductsById);
 router.delete('/:productsId',productsController.productsDeleteById);
-router.put/('/updateProducts', productsController.UpdateProducts);
+router.put('/updateProducts', productsController.UpdateProducts);
 
 
 
