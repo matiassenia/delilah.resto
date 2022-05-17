@@ -12,9 +12,9 @@ const createProducts = async (req, res) =>{
     let arrayInsertProducts= [`${nombre_plato}`, `${descripcion_plato}`,`${precio}`,`${imagen}`]
     
     try {
-        const ProductData = await sequelize.query('INSERT INTO nuestros_platos(nombre_plato, descripcion_plato, precio, imagen) VALUES( ?, ?, ?, ?,)',
+        const productData = await sequelize.query('INSERT INTO nuestros_platos(nombre_plato, descripcion_plato, precio, imagen) VALUES( ?, ?, ?, ?,)',
         {replacements: arrayInsertProducts , type: sequelize.QueryTypes.INSERT })
-        res.status(201).json({msq: "Producto creado", data: ProductData})
+        res.status(201).json({msq: "Producto creado", data: productData})
 
     } catch (error) {
         console.log(`error en la inserción ${error}`)
