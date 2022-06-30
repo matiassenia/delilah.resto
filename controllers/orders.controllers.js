@@ -3,16 +3,16 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const createOrder = async (req, res) => {
-    const {id_usuario, id_metodo_de_pago, id_estado} = req.body; 
-    const arrayInsertOrder = [`${id_usuario}`,`${id_metodo_de_pago}`,`${id_estado}`];
+    const {id_usuario, nuestros_platos, id_metodo_de_pago, id_estado} = req.body; 
+    const arrayInsertOrder = [`${id_usuario}`,`${nuestros_platos}`,`${id_metodo_de_pago}`,`${id_estado}`];
     try {
-        const result = await sequelize.query('INSERT INTO pedidos (id_usuario, id_metodo_de_pago, id_estado) VALUES (?,?,?,)',
+        const result = await sequelize.query('INSERT INTO pedidos (id_usuario, id_plato, id_metodo_de_pago, id_estado) VALUES (?,?,?,?)',
         {replacements: arrayInsertOrder, type: sequelize.QueryTypes.INSERT})
         console.log("result", result);
         res.status(201).json({msg: "Pedido creado", result})
     }catch (error){
         if (error.name){
-            res.status(400).json({ error : error.name, msg: "error en la creación del pedido"})
+            res.status(400).json({error, msg: 'error en la creación del pedido'})
         } else {
             res.status(500).json({error, msg: 'error inesperado'})
         }
@@ -21,9 +21,10 @@ const createOrder = async (req, res) => {
 
 const getOrder = async (req, res) => {
     try {
-        const result = await sequelize.query('SELECT id_pedido, hora, e.nombre_plato as estado_del_pedido, mp.nombre_plato as metodo_de_pago, u.nombre_usuario, u.direccion, u.email FROM pedidos left join usuarios u using(id_usuario) left join estado_del_pedido e using(id_estado) left join metodo_de_pago mp using(id_metodo_de_pago)', {type: sequelize.QueryTypes.SELECT})
+        const result = await sequelize.query(`SELECT id_pedido, hora, e.nombre_plato as estado_del_pedido, mp.nombre_plato as metodo_de_pago, u.nombre_usuario, u.direccion, u.email FROM pedidos left join usuarios u using(id_usuario) left join estado_del_pedido e using(id_estado) left join metodo_de_pago mp using(id_metodo_de_pago)`, 
+        {type: sequelize.QueryTypes.SELECT})
         res.status(201).json({result})
-    }catch(error){
+    } catch (error){
         if (error.name) {
             res.status(404).json({error, msg: 'error en la busqueda'})
         } else {
