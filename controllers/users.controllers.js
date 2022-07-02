@@ -35,41 +35,14 @@ const createUser = async (req, res) =>{
 
 const getUsers = async (req, res) => {
     try {
-        const result = await sequelize.query("SELECT * FROM usuarios", {type: sequelize.QueryTypes.SELECT}) 
+        const result = await sequelize.query('SELECT * FROM usuarios', {type: sequelize.QueryTypes.SELECT}) 
         res.status(201).json({result})
     } catch (error) {
-        console.log(`Algo salió mal ${error}`)
         if (error.nombre){
-        res.status(404).json({msq: "Ah ocurrido un error"})
+        res.status(404).json({msq: 'Usuario no encontrado'})
         } else {
         res.status(500).json({error, msg:'Error, intenta nuevamente'})
         }
-    }
-}
-
-
-//Login sin uso 
-const loginUser = async (req, res) => {
-    try {
-        const result = await sequelize.query('SELECT * FROM usuarios WHERE nombre_usuario ="'+req.body.nombre_usuario+'"AND contrasena ="'+ req.body.contrasena +'"', { type: sequelize.QueryTypes.SELECT});
-        
-        const {nombre_usuario, contrasena} = req.body;
-            if (nombre_usuario !== result[0].nombre_usuario || contrasena !== result[0].contrasena) {
-                return res.status(401).json({message: "Usuario invalido"});
-            }
-            const usuario = {
-                nombre_usuario: nombre_usuario,
-                id_usuario: result[0].id_usuario,
-                id_role:result[0].id_tipo_de_usuario,
-            }
-            const jwtToken = jwt.sign(usuario, KEY, {expiresIn: '1h'});
-            console.log("token:", jwtToken)
-            console.log(usuario)
-            res.status(200).json({token: jwtToken});
-            
-    }catch (error) {
-        console.log('No se encontró el usuario')
-        res.status(404).json({msg: "Error al intentar loguearse"})
     }
 }
 
@@ -108,6 +81,7 @@ const UserDeleteById = async (req, res) => {
 }
 
 const UpdateUserById = async (req, res) => {
+    
     const { nombre_usuario, nombre, apellido, email, telefono, direccion, contrasena, tipo_de_usuario} = req.body
     try {
     const result = await sequelize.query(`UPDATE usuarios 
@@ -130,4 +104,3 @@ exports.getUsers = getUsers;
 exports.getUsersById = getUsersById;
 exports.UserDeleteById = UserDeleteById;
 exports.UpdateUserById = UpdateUserById;
-exports.loginUser = loginUser;
