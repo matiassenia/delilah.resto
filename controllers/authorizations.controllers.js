@@ -2,27 +2,26 @@ const sequelize = require('../conexion');
 const jwt = require ('jsonwebtoken');
 require('dotenv').config();
 const bcrypt = require('bcrypt');
-const { use } = require('../routes/users');
-const { response } = require('express');
+
 
 const signUp = async (req, res) => {
-    const {nombre_usuario, email, contrasena, tipo_de_usuario} = req.body;
+    const {nombre_usuario, email, contrasena, id_tipo_de_usuario} = req.body;
 
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(contrasena, salt);
 
-    let arrayInsertUsers = [`${nombre_usuario}`,`${email}`, `${passwordHash}`, `${tipo_de_usuario}`]
+    let arrayInsertUsers = [`${nombre_usuario}`,`${email}`, `${passwordHash}`, `${id_tipo_de_usuario}`]
 
     try {
         const result = await sequelize.query('INSERT INTO usuarios(nombre_usuario, nombre, apellido, email, telefono, direccion, contrasena, id_tipo_de_usuario ) VALUES( ?, ?, ?, ?, ?, ?, ?, ?)',
             {replacements: arrayInsertUsers, type: sequelize.QueryTypes.INSERT})
-            res.status(201).json({msq: `Usuario registrado con exito! Hola ${nombre_usuario}!`, data: result})
+            res.status(201).json({msq: `Usuario registrado con exito, Bienvenido ${nombre_usuario}!`, data: result})
         } catch (error) {
-            console.log(`error en la inserción ${error}`)
+            console.log(`error ${error}`)
             if (error.nombre === 'SequelizeUniqueConstraintError') {
-                res.status(404).json({msq: "El nombre del usuario ya existe"})
+                res.status(404).json({msq: "Usuario existente"})
         } else {
-            (error) 
+            (error);
                 res.status(500).json({msq: "Ah ocurrido un error en la inserción, intenta nuevamente"})
             }
         }   
@@ -33,13 +32,13 @@ const signIn = async (req, res) => {
     try {
         const user = await sequelize.query(`SELECT * FROM usuarios WHERE email = '${req.body,email}'`,
         {type: sequelize.QueryTypes.SELECT})
-        user = user[0]
+        user = user[0];
         if (!user) {
             return res.status(400).json({error: 'Hay un error en la inserción de los datos de usuario y/o contraseña'})
         }
-        const CheckPass = await bcrypt.compare(req.body.contrasena, user.contrasena, (err, res) => {
+        const checkPass = await bcrypt.compare(req.body.contrasena, user.contrasena, (error, res) => {
             if (error) {
-                return res.status(400).json({err, msq:'Hay algo que no coincide'})
+                return res.status(400).json({err, msq:'Hay algún dato que no coincide'})
             }
             if (res) {
                 const token = jwt.sign({
@@ -58,7 +57,7 @@ const signIn = async (req, res) => {
                 }
             })
         } catch (err) {
-            res.status(500).json({err, msq:'Error inesperado'})
+            res.status(500).json({err, msq:'Error, vuelve a intentarlo'})
     }
 }
 
