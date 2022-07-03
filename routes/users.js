@@ -5,11 +5,11 @@ const verifyToken = require('../middleware/seguridad');
 
 
 //ENDPOINTS USER
-router.post('/', [verifyToken.verifyToken, verifyToken.ValidarAdmin], userController.createUser);
-router.get('/', [verifyToken.verifyToken, verifyToken.ValidarAdmin], userController.getUsers);
-router.get('/:userId', [verifyToken.verifyToken, verifyToken.ValidarAdmin], userController.getUsersById);
-router.delete('/:userId', [verifyToken.verifyToken, verifyToken.ValidarAdmin], userController.UserDeleteById);
-router.put/('/updateUser', [verifyToken.verifyToken, verifyToken.ValidarAdmin], userController.UpdateUserById);
+router.post('/', [verifyToken.verifyToken, verifyToken.validarAdmin], userController.createUser);
+router.get('/', [verifyToken.verifyToken, verifyToken.validarAdmin], userController.getUsers);
+router.get('/:userId', [verifyToken.verifyToken, verifyToken.validarAdmin], userController.getUsersById);
+router.delete('/:userId', [verifyToken.verifyToken, verifyToken.validarAdmin], userController.UserDeleteById);
+router.put/('/updateUser', [verifyToken.verifyToken, verifyToken.validarAdmin], userController.UpdateUserById);
 
 
 

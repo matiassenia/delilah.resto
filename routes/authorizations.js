@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authController = require("../controllers/authorizations.controllers")
+const authController = require("../controllers/authorizations.controllers");
 
 //Rutas de logueo y registro
 

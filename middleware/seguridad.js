@@ -8,53 +8,53 @@ const limiter = rateLimit ({
     max: 5
 });
 
+
+//verificar token
+
 const verifyToken = async (req, res, next) => {
-    const token = req.headers.authorization.split(" ")[1];
+    const authToken = req.headers.authorization.split(" ")[1];
     
     try{
-        jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) =>{
+        jwt.verify(authToken, process.env.SECRET_TOKEN, (err, decoded) => {
             if(err){
-                console.log("ah ocurrido un error con la validacion del token");
-                return res.status(401).json({msg:"Token invalidooo"})
+                console.log("Ah ocurrido un error con la validacion del token");
+                return res.status(401).json({msg:"Acceso denegado"})
             }
         }) 
-        next()
+        next();
     } catch (err) {
         console.log("error:" + error);
         res.status(401).json({msg: 'Proporciona un token por favor'})
     }
 }
-//validate admin
-const ValidarAdmin = async (req, res, next) => {
-    const token = req.headers['authorization']; 
-        if (!token) {
-            return res.status(401).json({msg: "usuario noo valido"})
+//validar admin
+
+const validarAdmin = async (req, res, next) =>{
+    const token = req.headers.authorization.split(" ")[1];
+    try {
+        jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
+            if(err){
+                console.log("Ah ocurrido un error con la validacion del token");
+                return res.status(401).json({msg: "Token invalido"})
             }
-        const jwtClient = token.split(" ")[1];
-        try{
-            jwt.verify(jwtClient, process.env.SECRET_TOKEN, (err, decoded) => {
-                if (err) {
-                    console.log("ha ocurrido un error con la validacion del token administrador");
-                    return res.status(401).json ({msg:"Token admin invalido"})
-                }
-                if (decoded && decoded.id_role !== 2){
-                    return res.status(403).json({msg: "Es usuario invalido para ejecutar este tipo de acción"})
-                }
-                next();
-                console.log(decoded)
-            });
-        } catch (e) {
-            console.log("error:" + error);
-            res.status(401).json({msg: 'Proporciona un token por favor'})
-        }
+            if(decoded && decoded.tipo_de_usuario !== 2){
+                return res.status(403).json({message: 'Para esta acción debes ser usuario de tipo administrador'})
+            }
+            next();
+        })
+    } catch (error) {
+        console.log("error:" + error);
+        res.status(401).json({ msg: 'Proporciona un token por favor' });
+    }
+
+    
 }
 
 
 
-
-
-exports.ValidarAdmin = ValidarAdmin;
+exports.validarAdmin = validarAdmin;
 exports.verifyToken = verifyToken;
+exports.limiter = limiter
 
 
 
