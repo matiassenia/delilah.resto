@@ -1,0 +1,624 @@
+swagger: '2.0'
+info:
+  description: Sistema de pedidos online para un restaurante [http://localhost:3000/]
+  version: 1.0.0
+  title: Delilah Restó
+  termsOfService: http://localhost:3000/
+  contact:
+    email: matiassenia9@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+host: localhost:3000
+basePath: /
+tags:
+  - name: authorizations
+    description: Operaciones sobre registro y login
+    externalDocs:
+      description: Documentacion externa authorizations
+      url: http://localhost:3000/authorizations
+  - name: orders
+    description: Operaciones CRUD orders
+    externalDocs:
+      description: Documentacion externa orders
+      url: http://localhost:3000/orders
+  - name: products
+    description: Operaciones CRUD products
+    externalDocs:
+      description: Documentacion externa de products
+      url: http://localhost:3000/products
+  - name: users
+    description: Operaciones CRUD users
+    externalDocs:
+      description: Documentacion externa de users
+      url: http://localhost:3000/users
+schemes:
+  - https
+  - http
+paths:
+  /register:
+    post:
+      tags:
+        - authorizations
+      summary: Registra un nuevo usuario en la aplicacion
+      description: ''
+      operationId: Nuevo Usuario
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Objeto user para crear un usuario
+          required: true
+          schema:
+            $ref: '#/definitions/users'
+      responses:
+        '201':
+          description: Usuario registrado con exito
+        '400':
+          description: Usuario existente
+        '500':
+          description: Ah ocurrido un error en la inserción, intenta nuevamente
+  /login:
+    post:
+      tags:
+        - authorizations
+      summary: Login de un usuario
+      description: ''
+      operationId: indentificar usuario
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Objeto para iniciar sesión en la app
+          required: true
+          schema:
+            $ref: '#/definitions/usersLogin'
+      responses:
+        '200':
+          description: Bienvenido {usuario}
+        '400':
+          description: Usuario invalido
+        '500':
+          description: Error, vuelve a intentarlo
+  /users:
+    get:
+      tags:
+        - users
+      summary: Obtener todos los usuarios
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Operacion Realizada
+          schema:
+            $ref: '#/definitions/users'
+        '404':
+          description: Usuarios no encontrados
+        '500':
+          description: Error intenta nuevamente
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    post:
+      tags:
+        - users
+      summary: Crea un nuevo usuario
+      description: ''
+      operationId: NuevoUsuario
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Objeto user para crear un usuario
+          required: true
+          schema:
+            $ref: '#/definitions/users'
+      responses:
+        '201':
+          description: Usuario Creado
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/users'
+        '404':
+          description: El nombre del usuario ya existe
+        '500':
+          description: Ah ocurrido un error en la inserción, intenta nuevamente
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+  /users/{id_user}:
+    get:
+      tags:
+        - users
+      summary: Busco un usuario por Id
+      description: Retorno un usuario
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_user
+          in: path
+          description: Identifica el id del usuario
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Operacion Realizada
+          schema:
+            $ref: '#/definitions/users'
+        '404':
+          description: Usuario no existe
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    put:
+      tags:
+        - users
+      summary: Modifico los datos del usuario
+      description: ''
+      operationId: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_user
+          in: path
+          description: ID of pet to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: user actualizado
+          schema:
+            $ref: '#/definitions/users'
+        '400':
+          description: Error al intentar actualizar los datos del usuario
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    delete:
+      tags:
+        - users
+      summary: Elimino a un usuario
+      description: ''
+      operationId: eliminarUsuario
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_user
+          in: path
+          description: Elimina usuario
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: Usuario eliminado
+        '404':
+          description: No se pudo eliminar el usuario
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+  /products:
+    post:
+      tags:
+        - products
+      summary: Crea un nuevo producto
+      description: ''
+      operationId: Nuevoproducto
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Objeto user para crear un nuevo producto
+          required: true
+          schema:
+            $ref: '#/definitions/products'
+      responses:
+        '201':
+          description: producto creado
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/products'
+        '404':
+          description: El producto ya existe con ese nombre
+        '500':
+          description: Ah ocurrido un error en la inserción, intenta nuevament
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    get:
+      tags:
+        - products
+      summary: Obtener todos los productos
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Operacion Realizada
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/products'
+        '404':
+          description: Ah ocurrido un error
+        '500':
+          description: Error, intenta nuevamente
+  /products/{id_product}:
+    get:
+      tags:
+        - products
+      summary: Busco un producto por Id
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: id_product
+          in: path
+          description: obtiene un producto por su ID
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: '{result}'
+          schema:
+            $ref: '#/definitions/products'
+        '400':
+          description: El producto no existe
+        '500':
+          description: Error inesperado
+    put:
+      tags:
+        - products
+      summary: Modifico datos del producto
+      description: ''
+      operationId: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_product
+          in: path
+          description: ''
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Producto actulizado
+          schema:
+            $ref: '#/definitions/products'
+        '400':
+          description: error al intentar actualizar
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    delete:
+      tags:
+        - products
+      summary: Elimina un producto
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_product
+          in: path
+          description: Eliminar producto
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: producto eliminado
+        '404':
+          description: No se pudo eliminar el producto
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+  /orders:
+    get:
+      tags:
+        - orders
+      summary: Obtener todas las órdenes
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Operacion Realizada
+          schema:
+            $ref: '#/definitions/orders'
+        '404':
+          description: '{result}'
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    post:
+      tags:
+        - orders
+      summary: Crea un nuevo pedido
+      description: ''
+      operationId: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Objeto para crear un nuevo pedido
+          required: true
+          schema:
+            $ref: '#/definitions/orders'
+      responses:
+        '201':
+          description: Pedido creado
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/orders'
+        '400':
+          description: error en la creación del pedido
+        '500':
+          description: Error inesperado
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+  /orders/{id_order}:
+    put:
+      tags:
+        - orders
+      summary: Modifico el status del pedido
+      description: ''
+      operationId: ''
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_order
+          in: path
+          description: ''
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Pedido actualizado
+          schema:
+            $ref: '#/definitions/statusOrder'
+        '404':
+          description: error en la actualización
+        '500':
+          description: Error
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+    delete:
+      tags:
+        - orders
+      summary: Elimina una orden
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+        - name: id_order
+          in: path
+          description: Eliminar orden
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: Pedido eliminado
+        '400':
+          description: Error en la eliminacion
+        '500':
+          description: Error
+      security:
+        - routes_auth:
+            - write:delilah
+            - read:delilah
+  /orders/user:
+    get:
+      tags:
+        - orders
+      summary: Obtener todos los pedidos de un usuario
+      description: ''
+      operationId: ''
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: header
+          required: true
+          type: string
+      responses:
+        '200':
+          description: '{result}'
+          schema:
+            $ref: '#/definitions/orders'
+        '404':
+          description: Error, datos no encontrados
+        '500':
+          description: Error
+      security:
+        - routes_auth:
+            - read:delilah
+definitions:
+  usersLogin:
+    type: object
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+  users:
+    type: object
+    properties:
+      nombre_usuario:
+        type: string
+      nombre:
+        type: string
+      email:
+        type: string
+      contrasena:
+        type: string
+      telefono:
+        type: string
+      direccion:
+        type: string
+      tipo_de_usuario:
+        type: integer
+        format: int32
+  products:
+    type: object
+    properties:
+      nombre_plato:
+        type: string
+      descripcion_plato:
+        type: string
+      precio:
+        type: integer
+      imagen:
+        type: string
+  orders:
+    type: object
+    properties:
+      nuestros_platos:
+        type: string
+      nombre_metodo_pago:
+        type: string
+      nombre_usuario:
+        type: string
+      direccion:
+        type: string
+      email:
+        type: string
+      nombre_tipo:
+        type: string
+  statusOrder:
+    type: object
+    properties:
+      id_status:
+        type: integer
+        format: int32
+      name:
+        type: string
+  roleUser:
+    type: object
+    properties:
+      id_role:
+        type: integer
+        format: int32
+securityDefinitions:
+  routes_auth:
+    type: oauth2
+    authorizationUrl: http://localhost:3000/
+    flow: implicit
+    scopes:
+      write:delilah: modifica elementos en la api
+      read:delilah: lee elementos de la API
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
