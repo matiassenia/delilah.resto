@@ -18,11 +18,11 @@ Crear el backend para un sistema de pedidos online para un restaurante.
 - Agregar Platos
 - Eliminar Platos
 - Actualizar Platos
-- Obtener todas las Órdenes
-- Eliminar Órdenes
-- Actualizar status de las Órdenes
-- Crear Órdenes
-- Actualizar role de Usuarios
+- Obtener todos los pedidos
+- Eliminar pedidos
+- Actualizar el estado de los pedidos
+- Crear pedidos
+- Actualizar el tipo de usuario
 - Agregar un nuevo Usuario
 - Eliminar Usuarios
 - Obtener todos los Usuarios
