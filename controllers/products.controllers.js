@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-//Probar 8/5/22
+
 
 const createProducts = async (req, res) =>{
     const { nombre_plato, descripcion_plato, precio, imagen} = req.body

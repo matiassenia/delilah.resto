@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const createOrder = async (req, res) => {
-    const {id_usuario, nuestros_platos, id_metodo_de_pago, id_estado} = req.body; 
-    const arrayInsertOrder = [`${id_usuario}`,`${nuestros_platos}`,`${id_metodo_de_pago}`,`${id_estado}`];
+    const {id_usuario, id_plato, id_metodo_de_pago, id_estado} = req.body; 
+    const arrayInsertOrder = [`${id_usuario}`,`${id_plato}`,`${id_metodo_de_pago}`,`${id_estado}`];
     try {
         const result = await sequelize.query('INSERT INTO pedidos (id_usuario, id_plato, id_metodo_de_pago, id_estado) VALUES (?,?,?,?)',
         {replacements: arrayInsertOrder, type: sequelize.QueryTypes.INSERT})
